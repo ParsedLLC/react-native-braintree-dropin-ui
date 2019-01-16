@@ -52,17 +52,14 @@ public class RNBraintreeDropInModule extends ReactContextBaseJavaModule {
 
     dropInRequest.collectDeviceData(true);
 
-    if(options.getBoolean("googlePay")){
+    if (options.getBoolean("googlePay")) {
       GooglePaymentRequest googlePaymentRequest = new GooglePaymentRequest()
-        .transactionInfo(TransactionInfo.newBuilder()
-          .setTotalPrice(options.getString("orderTotal"))
-          .setTotalPriceStatus(WalletConstants.TOTAL_PRICE_STATUS_FINAL)
-          .setCurrencyCode(options.getString("currencyCode"))
-          .build());
+          .transactionInfo(TransactionInfo.newBuilder().setTotalPrice(options.getString("orderTotal"))
+              .setTotalPriceStatus(WalletConstants.TOTAL_PRICE_STATUS_FINAL)
+              .setCurrencyCode(options.getString("currencyCode")).build());
 
       dropInRequest.googlePaymentRequest(googlePaymentRequest);
     }
-
 
     if (options.hasKey("threeDSecure")) {
       final ReadableMap threeDSecureOptions = options.getMap("threeDSecure");
@@ -73,9 +70,12 @@ public class RNBraintreeDropInModule extends ReactContextBaseJavaModule {
 
       isVerifyingThreeDSecure = true;
 
-      dropInRequest
-      .amount(String.valueOf(threeDSecureOptions.getDouble("amount")))
-      .requestThreeDSecureVerification(true);
+      dropInRequest.amount(String.valueOf(threeDSecureOptions.getDouble("amount")))
+          .requestThreeDSecureVerification(true);
+    }
+
+    if (options.hasKey("paypalDisabled") && options.getBoolean("paypalDisabled")) {
+      dropInRequest.disablePayPal();
     }
 
     mPromise = promise;
